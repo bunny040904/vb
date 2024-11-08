@@ -1,0 +1,133 @@
+Practical 13
+
+// 13. Create Database TECSD using MongoDB Create following Collections.
+Teachers (Tname, dno, dname, experience, salary, date_of_joining ) //dno- department no, Tname- Tearcher name
+Students(Sname,roll_no,class)
+At list perform 8 queries)
+1.Find the information about all teachers
+2.Find the information about all teachers of CSD department
+3.Find the information about all teachers of computer, IT, and CSD department
+4.Find the information about all teachers of computer, IT,and CSD department having salary
+to10000/-
+5.Find the student information having roll_no = 2 or Sname= Hitesh
+6. Update the experience of teacher-praveen to 10years, if the entry is not available in 
+databaseconsider the entry as new entry.
+7.Update the deparment of all the teachers working in IT department to 
+CSD 8.find the teachers name and their experience from teachers
+collection
+9. Insert one entry in department collection
+10. Change the dept of teacher Rajesh to IT
+11. Delete all the documents from teacher’s collection having IT dept.
+12. Display with pretty() method, the first 3 documents in teachers collection in ascending order//
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+mongodb
+use TECSD
+
+db.createCollection("Teachers")
+db.createCollection("Students")
+db.createCollection("Department")
+
+
+mongodb
+db.Teachers.insertMany([
+  { Tname: "Praveen", dno: 1, dname: "CSD", experience: 5, salary: 8000, date_of_joining: "2018-01-01" },
+  { Tname: "Rajesh", dno: 2, dname: "IT", experience: 3, salary: 7000, date_of_joining: "2020-01-01" },
+  { Tname: "Hema", dno: 1, dname: "CSD", experience: 10, salary: 12000, date_of_joining: "2015-01-01" },
+  { Tname: "Suresh", dno: 3, dname: "Computer", experience: 8, salary: 10000, date_of_joining: "2012-01-01" }
+])
+
+db.Students.insertMany([
+  { Sname: "Hitesh", roll_no: 1, class: "FY" },
+  { Sname: "Rahul", roll_no: 2, class: "SY" },
+  { Sname: "Rohan", roll_no: 3, class: "TY" }
+])
+
+
+Queries
+
+1. Find the information about all teachers
+
+
+mongodb
+db.Teachers.find()
+
+
+1. Find the information about all teachers of CSD department
+
+
+mongodb
+db.Teachers.find({ dname: "CSD" })
+
+
+1. Find the information about all teachers of computer, IT, and CSD department
+
+
+mongodb
+db.Teachers.find({ dname: { $in: ["Computer", "IT", "CSD"] } })
+
+
+1. Find the information about all teachers of computer, IT,and CSD department having salary upto 10000/-
+
+
+mongodb
+db.Teachers.find({ dname: { $in: ["Computer", "IT", "CSD"] }, salary: { $lte: 10000 } })
+
+
+1. Find the student information having roll_no = 2 or Sname= Hitesh
+
+
+mongodb
+db.Students.find({ $or: [{ roll_no: 2 }, { Sname: "Hitesh" }] })
+
+
+1. Update the experience of teacher-Praveen to 10years, if the entry is not available in database consider the entry as new entry.
+
+
+mongodb
+db.Teachers.updateOne({ Tname: "Praveen" }, { $set: { experience: 10 } }, { upsert: true })
+
+
+1. Update the department of all the teachers working in IT department to CSD
+
+
+mongodb
+db.Teachers.updateMany({ dname: "IT" }, { $set: { dname: "CSD" } })
+
+
+1. Find the teachers name and their experience from teachers collection
+
+
+mongodb
+db.Teachers.find({}, { Tname: 1, experience: 1 })
+
+
+1. Insert one entry in department collection
+
+
+mongodb
+db.Department.insertOne({ dept_id: 1, dept_name: "CSD" })
+
+
+1. Change the dept of teacher Rajesh to IT
+
+
+mongodb
+db.Teachers.updateOne({ Tname: "Rajesh" }, { $set: { dname: "IT" } })
+
+
+1. Delete all the documents from teacher’s collection having IT dept.
+
+
+mongodb
+db.Teachers.deleteMany({ dname: "IT" })
+
+
+1. Display with pretty() method, the first 3 documents in teachers collection in ascending order
+
+
+mongodb
+db.Teachers.find().sort({ Tname: 1 }).limit(3).pretty()

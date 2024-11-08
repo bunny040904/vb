@@ -1,0 +1,94 @@
+6.Consider the following two tables:
+a. Stud_Info Table is as follows
+Rno Name Address
+1 Abhay Nagar
+2 Sarika Nashik
+3 Riya Pune
+4 Sachin Mumbai
+
+b. Stud_Marks Table is as follows
+Rno DSD IOT
+1    50 45
+2    67 65
+3   76 55
+5   70 50
+a. Apply inner Join on above tables and show the result
+b. Apply Left Join (or left outer join) on above tables and show the result.
+c. Apply Right Join (or right outer join) on above tables and show the result.
+
+--------------------------------------------------------------------------------
+
+CREATE DATABASE SchoolDB;
+USE SchoolDB;  -- Switch to the newly created database
+
+-- Create Stud_Info table
+CREATE TABLE Stud_Info (
+    Rno INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Address VARCHAR(100)
+);
+
+-- Create Stud_Marks table
+CREATE TABLE Stud_Marks (
+    Rno INT,
+    DSD INT,
+    IOT INT
+);
+
+-- Insert data into Stud_Info
+INSERT INTO Stud_Info (Rno, Name, Address) VALUES
+(1, 'Abhay', 'Nagar'),
+(2, 'Sarika', 'Nashik'),
+(3, 'Riya', 'Pune'),
+(4, 'Sachin', 'Mumbai');
+
+-- Insert data into Stud_Marks
+INSERT INTO Stud_Marks (Rno, DSD, IOT) VALUES
+(1, 50, 45),
+(2, 67, 65),
+(3, 76, 55),
+(5, 70, 50);  -- Note: Rno 5 does not exist in Stud_Info
+
+[-----Apply INNER JOIN
+SELECT 
+    si.Rno,
+    si.Name,
+    si.Address,
+    sm.DSD,
+    sm.IOT
+FROM 
+    Stud_Info si
+INNER JOIN 
+    Stud_Marks sm ON si.Rno = sm.Rno;
+
+ ------Apply LEFT JOIN
+SELECT 
+    si.Rno,
+    si.Name,
+    si.Address,
+    sm.DSD,
+    sm.IOT
+FROM 
+    Stud_Info si
+LEFT JOIN 
+    Stud_Marks sm ON si.Rno = sm.Rno;
+
+-----Apply RIGHT JOIN
+
+SELECT 
+    si.Rno,
+    si.Name,
+    si.Address,
+    sm.DSD,
+    sm.IOT
+FROM 
+    Stud_Info si
+RIGHT JOIN 
+    Stud_Marks sm ON si.Rno = sm.Rno;
+--------------------------------------------------------------------------------------------------
+
+//Create the Database and Tables: We created a database and two tables: Stud_Info and Stud_Marks.
+Insert Data: We populated the tables with sample data.
+INNER JOIN: Returned only students with marks.
+LEFT JOIN: Returned all students, even those without marks.
+RIGHT JOIN: Returned all marks, even those not linked to any student.//

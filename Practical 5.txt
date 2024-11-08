@@ -1,0 +1,105 @@
+Practical 5th
+
+//Consider the following two tables:
+a) Persons table is as follow:
+Pid Last name First name    Address     City
+1   Amit        Tiwari       kharadi    Pune
+2  Suresh       Mishra       Gangapur  Nashik
+3   Shalu      Choudhary      savedi  Ahmednagar
+
+a)  Order Table is as follows:
+O_id Order_Date    Order_Price P_id
+1     2023-02-11      1000       3
+2     2023-03-12      1600        3
+3      2023-04-10      700        1
+4      2022-07-24     300         1
+5       2022-08-30    2000      NULL
+a. Apply inner Join on above tables and show the result
+b. Apply Left Join (or left outer join) on above tables and show the result.
+c. Apply Right Join (or right outer join) on above tables and show the result.//
+---------------------------------------------------------------------------------------------
+
+CREATE DATABASE StoreDB;
+USE StoreDB;  -- Switch to the newly created database
+
+-- Create Persons table
+CREATE TABLE Persons (
+    Pid INT PRIMARY KEY,
+    LastName VARCHAR(50),
+    FirstName VARCHAR(50),
+    Address VARCHAR(100),
+    City VARCHAR(50)
+);
+
+-- Create Orders table
+CREATE TABLE Orders (
+    O_id INT PRIMARY KEY,
+    Order_Date DATE,
+    Order_Price DECIMAL(10, 2),
+    P_id INT);
+
+-- Insert data into Persons table
+INSERT INTO Persons (Pid, LastName, FirstName, Address, City) VALUES
+(1, 'Tiwari', 'Amit', 'kharadi', 'Pune'),
+(2, 'Mishra', 'Suresh', 'gangapur', 'Nashik'),
+(3, 'Choudhary', 'Shalu', 'savedi', 'Ahmednagar');
+
+-- Insert data into Orders table
+INSERT INTO Orders (O_id, Order_Date, Order_Price, P_id) VALUES
+(1, '2023-02-11', 1000, 3),
+(2, '2023-03-12', 1600, 3),
+(3, '2023-04-10', 700, 1),
+(4, '2022-07-24', 300, 1),
+(5, '2022-08-30', 2000, NULL); 
+
+--- Apply INNER JOIN
+
+SELECT 
+    p.Pid,
+    p.LastName,
+    p.FirstName,
+    p.Address,
+    p.City,
+    o.O_id,
+    o.Order_Date,
+    o.Order_Price
+FROM 
+    Persons p
+INNER JOIN 
+    Orders o ON p.Pid = o.P_id;
+
+ ----Apply LEFT JOIN
+SELECT 
+    p.Pid,
+    p.LastName,
+    p.FirstName,
+    p.Address,
+    p.City,
+    o.O_id,
+    o.Order_Date,
+    o.Order_Price
+FROM 
+    Persons p
+LEFT JOIN 
+    Orders o ON p.Pid = o.P_id;
+
+--- Apply RIGHT JOIN
+
+SELECT 
+    p.Pid,
+    p.LastName,
+    p.FirstName,
+    p.Address,
+    p.City,
+    o.O_id,
+    o.Order_Date,
+    o.Order_Price
+FROM 
+    Persons p
+RIGHT JOIN 
+    Orders o ON p.Pid = o.P_id;
+--------------------------------------------------------------------------
+
+INNER JOIN: Displays only those persons who have placed orders.
+LEFT JOIN: Displays all persons, showing NULL for orders where there is no match.
+RIGHT JOIN: Displays all orders, including those with NULL for persons when there's no match.

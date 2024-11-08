@@ -1,0 +1,119 @@
+Practical 2
+
+. Create the following tables .And Solve following queries by SQL
+ Deposit (actno,cname,bname,amount,adate) 
+ Branch (bname,city)
+ Customers (cname, city)
+ Borrow(loanno,cname,bname, amount)
+- Add primary key and foreign key wherever applicable.
+- Insert data into the above created tables.
+Perform the following queries:
+1. Display names of depositors having amount greater than 4000.
+2. Display account date of customers Anil
+3. Display account no. and deposit amount of customers having account opened between 
+dates1-12-96 and 1-5-97
+4. Find the names of all branches where the average account balance is more than 1,200.
+5. Delete depositors having deposit less than 5000
+6. Create a view on deposit table
+
+-------------------------------------------------------------------
+
+-- Create Customers table
+CREATE TABLE Customers (
+    cname VARCHAR(50) PRIMARY KEY,
+    city VARCHAR(50)
+);
+
+-- Create Branch table
+CREATE TABLE Branch (
+    bname VARCHAR(50) PRIMARY KEY,
+    city VARCHAR(50)
+);
+
+-- Create Deposit table with foreign keys referencing Customers and Branch
+CREATE TABLE Deposit (
+    actno INT PRIMARY KEY,
+    cname VARCHAR(50),
+    bname VARCHAR(50),
+    amount DECIMAL(10, 2),
+    adate DATE,
+    FOREIGN KEY (cname) REFERENCES Customers(cname),
+    FOREIGN KEY (bname) REFERENCES Branch(bname)
+);
+
+-- Create Borrow table with foreign keys referencing Customers and Branch
+CREATE TABLE Borrow (
+    loanno INT PRIMARY KEY,
+    cname VARCHAR(50),
+    bname VARCHAR(50),
+    amount DECIMAL(10, 2),
+    FOREIGN KEY (cname) REFERENCES Customers(cname),
+    FOREIGN KEY (bname) REFERENCES Branch(bname)
+);
+
+
+-- Insert data into Branch table
+INSERT INTO Branch (bname, city) VALUES ('Main', 'CityA');
+INSERT INTO Branch (bname, city) VALUES ('North', 'CityB');
+INSERT INTO Branch (bname, city) VALUES ('South', 'CityC');
+
+-- Insert data into Customers table
+INSERT INTO Customers (cname, city) VALUES ('Anil', 'CityA');
+INSERT INTO Customers (cname, city) VALUES ('Sunita', 'CityB');
+INSERT INTO Customers (cname, city) VALUES ('Raj', 'CityC');
+
+-- Insert data into Deposit table
+INSERT INTO Deposit (actno, cname, bname, amount, adate) VALUES (1001, 'Anil', 'Main', 5000.00, '1997-01-10');
+INSERT INTO Deposit (actno, cname, bname, amount, adate) VALUES (1002, 'Sunita', 'North', 3000.00, '1996-12-05');
+INSERT INTO Deposit (actno, cname, bname, amount, adate) VALUES (1003, 'Raj', 'South', 4500.00, '1996-11-25');
+
+-- Insert data into Borrow table
+INSERT INTO Borrow (loanno, cname, bname, amount) VALUES (2001, 'Anil', 'Main', 2000.00);
+INSERT INTO Borrow (loanno, cname, bname, amount) VALUES (2002, 'Sunita', 'North', 1500.00);
+INSERT INTO Borrow (loanno, cname, bname, amount) VALUES (2003, 'Raj', 'South', 2500.00);
+
+----Perform Queries
+
+1. Display names of depositors having an amount greater than 4000.
+
+SELECT cname 
+FROM Deposit 
+WHERE amount > 4000;
+
+
+2. Display the account date of customer Anil.
+
+SELECT adate 
+FROM Deposit 
+WHERE cname = 'Anil';
+
+
+3. Display account number and deposit amount of customers with accounts opened between 1-12-96 and 1-5-97.
+
+SELECT actno, amount 
+FROM Deposit 
+WHERE adate BETWEEN '1996-12-01' AND '1997-05-01';
+
+
+4. Find the names of all branches where the average account balance is more than 1200.
+
+SELECT bname 
+FROM Deposit 
+GROUP BY bname 
+HAVING AVG(amount) > 1200;
+
+
+5. Delete depositors having deposits less than 5000.
+
+DELETE FROM Deposit 
+WHERE amount < 5000;
+
+
+6. Create a view on the Deposit table.
+
+CREATE VIEW DepositView AS
+SELECT actno, cname, bname, amount, adate 
+FROM Deposit;
+
+
+

@@ -1,0 +1,136 @@
+Practical 3
+
+3. Create a database called Company consist of the following tables.
+1.Emp(eno,ename,job,hiredate,salary, commission, deptno)
+2.dept(deptno, deptname, location)
+- eno is primary key in emp
+- deptno is primary key in dept
+PerformtheQueriesbySQL (At list 6 query)
+1. List the maximum salary paid to salesman
+2. List name of emp whose name start with „I‟
+3. List details of emp who have joined before ‟30-sept-81‟
+4. List the emp details in the of their basic salary
+5. List of no. of emp & avg salary for emp in the dept no “20‟
+6. List the avg salary, minimum salary of the emp hiredatewise for dept no „10‟.
+7. List emp name and its department
+8. List total salary paid to each department
+9. List details of employee working in “Development‟ department
+10. Update salary of all employees in deptno 10 by 5 %
+
+--------------------------------------------------------------------------------------------
+
+-- Create the Company database
+CREATE DATABASE Company;
+
+-- Use the Company database
+USE Company;
+
+-- Create the dept table
+CREATE TABLE dept (
+    deptno INT PRIMARY KEY,
+    deptname VARCHAR(50),
+    location VARCHAR(50)
+);
+
+-- Create the emp table with foreign key constraint
+CREATE TABLE emp (
+    eno INT PRIMARY KEY,
+    ename VARCHAR(50),
+    job VARCHAR(50),
+    hiredate DATE,
+    salary DECIMAL(10, 2),
+    commission DECIMAL(10, 2),
+    deptno INT,
+    FOREIGN KEY (deptno) REFERENCES dept(deptno)
+);
+
+
+-- Insert data into dept table
+INSERT INTO dept (deptno, deptname, location) VALUES (10, 'Sales', 'New York');
+INSERT INTO dept (deptno, deptname, location) VALUES (20, 'Development', 'Los Angeles');
+INSERT INTO dept (deptno, deptname, location) VALUES (30, 'Marketing', 'Chicago');
+
+-- Insert data into emp table
+INSERT INTO emp (eno, ename, job, hiredate, salary, commission, deptno) VALUES (1, 'Ian', 'Salesman', '1980-05-01', 3000.00, 500.00, 10);
+INSERT INTO emp (eno, ename, job, hiredate, salary, commission, deptno) VALUES (2, 'Ivy', 'Developer', '1981-06-01', 3500.00, NULL, 20);
+INSERT INTO emp (eno, ename, job, hiredate, salary, commission, deptno) VALUES (3, 'John', 'Manager', '1979-09-01', 5000.00, NULL, 30);
+INSERT INTO emp (eno, ename, job, hiredate, salary, commission, deptno) VALUES (4, 'Alice', 'Developer', '1980-11-01', 2800.00, NULL, 20);
+INSERT INTO emp (eno, ename, job, hiredate, salary, commission, deptno) VALUES (5, 'Irene', 'Salesman', '1982-01-01', 3200.00, 400.00, 10);
+INSERT INTO emp (eno, ename, job, hiredate, salary, commission, deptno) VALUES (6, 'Bob', 'Salesman', '1980-08-15', 3400.00, 450.00, 10);
+
+3. Perform Queries
+
+1. List the maximum salary paid to salesmen.
+
+SELECT MAX(salary) AS max_salary
+FROM emp
+WHERE job = 'Salesman';
+
+
+2. List the name of employees whose name starts with 'I'.
+
+SELECT ename
+FROM emp
+WHERE ename LIKE 'I%';
+
+
+3. List details of employees who joined before '30-sept-81'.
+
+SELECT *
+FROM emp
+WHERE hiredate < '1981-09-30';
+
+
+4. List the employee details in the order of their basic salary.
+
+SELECT *
+FROM emp
+ORDER BY salary;
+
+
+5. List the number of employees and average salary for employees in department number "20".
+
+SELECT COUNT(*) AS no_of_emp, AVG(salary) AS avg_salary
+FROM emp
+WHERE deptno = 20;
+
+
+6. List the average salary and minimum salary of employees hiredate-wise for department number "10".
+
+SELECT hiredate, AVG(salary) AS avg_salary, MIN(salary) AS min_salary
+FROM emp
+WHERE deptno = 10
+GROUP BY hiredate;
+
+
+7. List employee names and their department names.
+
+SELECT emp.ename, dept.deptname
+FROM emp
+JOIN dept ON emp.deptno = dept.deptno;
+
+
+8. List the total salary paid to each department.
+
+SELECT dept.deptname, SUM(emp.salary) AS total_salary
+FROM emp
+JOIN dept ON emp.deptno = dept.deptno
+GROUP BY dept.deptname;
+
+
+9. List details of employees working in the "Development" department.
+
+SELECT emp.*
+FROM emp
+JOIN dept ON emp.deptno = dept.deptno
+WHERE dept.deptname = 'Development';
+
+
+10. Update the salary of all employees in department number 10 by 5%.
+
+
+
+UPDATE emp
+SET salary = salary * 1.05
+WHERE deptno = 10;
+

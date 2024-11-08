@@ -1,0 +1,77 @@
+Practical 15
+//
+15.You are tasked with analyzing student performance data stored in a MongoDB collection. 
+Each document represents a student's name and their marks. Your goal is to utilize MongoDB's 
+MapReduce functionality to derive meaningful insights from this data.You have the following 
+records in the students collection:
+ Amit: 80, 90
+ Shreya: 40
+ Neha: 80, 35
+ Perform following queries.
+1. Counting Student Occurrences
+2. Retrieving Occurrence Counts
+3. Calculating Total Marks
+4. Sorting Results by Total Marks
+5. Limiting Results
+6. Conditional-Aggregation //
+-----------------------------------------
+
+-----Create the database
+use DEMART
+
+-----Create the collection
+db.createCollection("Product")
+
+-----Insert documents into the collection
+db.Product.insertMany([
+    { Item: "Paste", Amount: 40, Customer: "Mike" },
+    { Item: "Guitar", Amount: 200, Customer: "Tom" },
+    { Item: "Milk", Amount: 60, Customer: "Mike" },
+    { Item: "Pizza", Amount: 150, Customer: "Kiran" },
+    { Item: "Paste", Amount: 40, Customer: "Kiran" },
+    { Item: "Pizza", Amount: 150, Customer: "Devika" },
+    { Item: "Paste", Amount: 40, Customer: "Mike" },
+    { Item: "Paste", Amount: 40, Customer: "Niraj" },
+    { Item: "Guitar", Amount: 200, Customer: "Reena" },
+    { Item: "Milk", Amount: 60, Customer: "Mike" },
+    { Item: "Pizza", Amount: 150, Customer: "Devika" },
+    { Item: "Paste", Amount: 40, Customer: "Devika" },
+    { Item: "Pizza", Amount: 150, Customer: "Kiran" },
+    { Item: "Paste", Amount: 40, Customer: "Reena" }
+])
+
+db.Product.aggregate([
+    {
+        $group: {
+            _id: "$Customer",
+            totalSpent: { $sum: "$Amount" }
+        }
+    }
+])
+
+
+db.Product.aggregate([
+    {
+        $group: {
+            _id: "$Customer",
+            itemsPurchased: { $sum: 1 }
+        }
+    }
+])
+
+db.Product.aggregate([
+    {
+        $group: {
+            _id: "$Customer",
+            averageSpent: { $avg: "$Amount" }
+        }
+    }
+])
+db.Product.aggregate([
+    {
+        $group: {
+            _id: "$Item",
+            totalSales: { $sum: "$Amount" }
+        }
+    }
+])
