@@ -1,0 +1,73 @@
+CURSOR
+
+mysql> create database study_cursor;
+mysql> use study_cursor;
+mysql> create table emp(Eid int(3), Ename varchar(10), City varchar(10), Post
+varchar(10),Salary int(5), deptno int(3));
+mysql> desc emp;
+mysql> insert into emp
+values(1,'John','Nashik','Clerk',5000,10),(2,'Seema','Aurangabad','Developer',20000,20),(3,
+'Amita','Nagar','Manager',70000,20),(4,'Rakesh','Pune','Analyst',8000,10),(5,'Samata','Nas
+hik','Tester',20000,10),(6,'Anita','Chandwad','Developer',30000,30),(7,'Bhavika','Pune','Tea
+m
+LR',50000,30),(8,'Deepa','Mumbai','CEO',90000,10),(9,'Nitin','Nagpur','Clerk',8000,30),(10,'
+pooja','Pune','Analyst',45000,20);
+mysql> select * from emp;
+
+// Write a PLSQL Block of code using with and without parameterized cursor for displaying
+the inserted rows and also update the salary by 5000 of those employee salary is above
+45000 and increase rest of the others by 1000.
+1. Without Parameter
+mysql> Delimiter //
+mysql> create procedure cr()
+-> begin
+-> declare eid1 int;
+-> declare sal1 int;
+-> declare ename1 varchar(20);
+-> declare exit_loop boolean;
+-> declare c1 cursor for select eid, ename, salary from emp;
+-> declare continue handler for not found set exit_loop=true;
+-> open c1;
+-> e1:loop
+-> fetch c1 into eid1, ename1, sal1;
+-> if (sal1>45000) then
+-> update emp set Salary=sal1+5000 where Eid=eid1;
+-> else
+-> update emp set Salary=sal1+1000 where Eid=eid1;
+-> end if;
+-> IF exit_loop then
+-> close c1;
+-> leave e1;
+-> end IF;
+-> end loop e1;
+-> select * from emp;
+-> end;
+-> //
+mysql> call cr()//
+/ 2. Use Parameterized CURSOR
+mysql> create procedure cr1(eid2 int)
+-> begin
+-> declare eid1 int;
+-> declare sal1 int;
+-> declare ename1 varchar(20);
+-> declare exit_loop boolean;
+-> declare c1 cursor for select eid, ename, salary from emp where Eid=eid2;
+-> declare continue handler for not found set exit_loop=true;
+-> open c1;
+-> e1:loop
+-> fetch c1 into eid1, ename1, sal1;
+-> if (sal1>45000) then
+-> update emp set Salary=sal1+5000 where Eid=eid1;
+-> else
+-> update emp set Salary=sal1+1000 where Eid=eid1;
+-> end if;
+-> IF exit_loop then
+-> close c1;
+-> leave e1;
+-> end IF;
+-> end loop e1;
+-> select * from emp;
+-> end;
+-> //
+mysql> call cr1(5)//
+mysql> call cr1(8)//

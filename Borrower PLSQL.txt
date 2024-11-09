@@ -1,0 +1,67 @@
+Borrower
+
+Unnamed PL/SQL code block: Use of Control structure and Exception handling is
+mandatory. Write a PL/SQL block of code for the following requirements:-
+Schema:
+1. Borrower(Roll_no, Name, DateofIssue, NameofBook, Status)
+2. Fine(Roll_no,Date,Amt)
+Accept roll_no & name of book from user.
+• Check the number of days (from date of issue), if days are between 15 to 30 then
+fine amount will be Rs 5per day.
+• If no. of days>30, per day fine will be Rs 50 per day & for days less than 30, Rs. 5
+per day.
+• After submitting the book, status will change from I to R.
+• If condition of fine is true, then details will be stored into fine table.
+*******************************************************************************
+
+mysql> use TECSD;
+mysql> create table B(Rno int(3), Name varchar(10), DOI Date, Bname varchar(20),
+Status char(1));
+mysql> create table Fine(Rno int, Date Date, Days int(3), Amt int(3));
+mysql> desc B;
+mysql> desc Fine;
+mysql> insert into B values
+(1,'Amit','2020-10-01','C++','I'),(2,'Shivani','2020-09-10','Java','I'),(3,'Roshan','2020-09-25','
+DBMS','I'),
+-> (4,'Amit','2020-09-28','CN','I'),(5,'Janavi','2020-10-17','Java','I');
+mysql> select * from B;
+mysql> select curdate();
+mysql> select datediff(curdate(), '2020-10-02');
+mysql> Create procedure P2(In Rno1 int(3), Bname1 varchar(30))
+-> Deterministic
+-> begin
+-> declare i_date Date;
+-> declare diff int;
+-> select DOI into i_date from B where Rno=Rno1 and Bname=Bname1;
+-> select DATEDIFF(CURDATE(), i_date) into diff;
+-> select diff;
+-> Update B set Status='R' where Rno=Rno1 and Bname=Bname1;
+-> end;
+-> //
+mysql> call P2(1,'C++')//
+mysql> select * from B//
+mysql> Delimiter //
+mysql> Create procedure P3(In Rno1 int(3), Bname1 varchar(30))
+-> begin
+-> Declare i_date date;
+-> Declare diff int;
+-> Declare fine_amt int;
+-> Declare status1 char(1);
+-> select Status into status1 from B where Rno=Rno1 and Bname=Bname1;
+-> If (status1 = 'I') then
+-> select DOI into i_date from B where Rno=Rno1 and Bname=Bname1;
+-> select datediff(curdate(), i_date) into diff;
+-> If (diff>=15 and diff<=30) then
+-> set fine_amt=diff * 5;
+-> insert into Fine values(Rno1, curdate(), diff, fine_amt);
+-> elseif(diff>30) then
+-> set fine_amt=diff * 50;
+-> insert into Fine values(Rno1, curdate(), diff, fine_amt);
+-> End If;
+-> Update B set Status='R' where Rno=Rno1 and Bname=Bname1;
+-> End If;
+-> select * from B;
+-> select * from Fine;
+-> End;
+-> //
+mysql> call P3(4,'CN')//

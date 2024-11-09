@@ -1,0 +1,82 @@
+Study Triggers
+
+
+
+
+mysql> create database study_trigger;
+mysql> use study_trigger;
+mysql> create table emp(eno int(3), ename varchar(10), salary int(5));
+mysql> create table audit(action varchar(10), date_of_action datetime, eno int(3), old_sal
+int(5), new_sal int(5));
+mysql> insert into emp values(101,'aa',5000),(102,'bb',6000);
+mysql> select * from emp;
+mysql> select * from audit;
+mysql> delimiter //
+mysql> create trigger t1 after update on emp for each row
+-> begin
+-> insert into audit values('update', now(), old.eno, old.salary, new.salary);
+-> end;
+-> //
+mysql> select * from emp//
+mysql> select * from audit//
+mysql> update emp set salary=12000 where eno=101//
+mysql> select * from audit//
+
+Example :
+Create a trigger for the given event
+1.UPDATE
+2.DELETE
+3.INSERT
+mysql> create database study_trigger2;
+mysql> use study_trigger2;
+mysql> create table emp(eno int(3), ename varchar(20), salary int(5));
+mysql> create table audit(action varchar(10), date_of_action datetime, eno int(3), old_sal
+int(5), new_sal int(5));
+mysql> insert into emp values(101,'aa',5000),(102,'bb',6000);
+mysql> select * from emp;
+mysql> select * from audit;
+
+1. UPDATE
+mysql> delimiter //
+mysql> create trigger t1 after update on emp for each row
+-> begin
+-> insert into audit values('update', now(), old.eno, old.salary,new.salary);
+-> end;
+-> //
+mysql> select * from emp//
+mysql> select * from audit//
+mysql> update emp set salary=12000 where eno=101//
+mysql> select * from emp//
+mysql> select * from audit//
+mysql> update emp set salary=salary+2000 where eno=102//
+mysql> select * from emp//
+mysql> select * from audit//
+mysql> delete from emp where eno=102//
+mysql> select * from emp//
+mysql> select * from audit//
+
+2. DELETE
+mysql> delimiter //
+mysql> create trigger t2 after delete on emp for each row
+-> begin
+-> insert into audit values('delete', now(), old.eno, old.salary, null);
+-> end;
+-> //
+mysql> select * from emp//
+mysql> select * from audit//
+mysql> delete from emp where eno=101;
+-> //
+mysql> select * from emp//
+mysql> select * from audit//
+
+3. INSERT
+mysql> delimiter //
+mysql> create trigger t3 before insert on emp for each row
+-> begin
+-> insert into audit values('insert', now(), new.eno, null, new.salary);
+-> end;
+-> //
+mysql> insert into emp values(104,'dd',7000)
+-> //
+mysql> select * from emp//
+mysql> select * from audit//
